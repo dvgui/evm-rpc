@@ -16,36 +16,36 @@ A TypeScript framework for interacting with EVM-compatible blockchain RPC endpoi
 ## Quick Start
 
 ```bash
-npm install
-npm run build
+yarn install
+yarn build
 
 # Get blockchain info
-npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com info
+yarn evm-rpc -u https://ethereum-rpc.publicnode.com info
 
 # Get latest/safe/finalized blocks
-npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block latest
-npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block safe
-npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block finalized
+yarn evm-rpc -u https://ethereum-rpc.publicnode.com block latest
+yarn evm-rpc -u https://ethereum-rpc.publicnode.com block safe
+yarn evm-rpc -u https://ethereum-rpc.publicnode.com block finalized
 
 # Check block finalization status
-npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block 23026700 --status
+yarn evm-rpc -u https://ethereum-rpc.publicnode.com block 23026700 --status
 
 # Get account balance
-npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+yarn evm-rpc -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
 ```
 
 ## CLI Commands
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `info` | Get blockchain information | `npm run evm-rpc -- -u URL info` |
-| `block-number` | Get current block number | `npm run evm-rpc -- -u URL block-number` |
-| `balance <address>` | Get account balance | `npm run evm-rpc -- -u URL balance 0x...` |
-| `block <identifier>` | Get block by number/hash/tag | `npm run evm-rpc -- -u URL block latest` |
-| `call <to>` | Make contract call | `npm run evm-rpc -- -u URL call 0x... -d 0x...` |
-| `code <address>` | Get contract code | `npm run evm-rpc -- -u URL code 0x...` |
-| `tx <hash>` | Get transaction details | `npm run evm-rpc -- -u URL tx 0x...` |
-| `receipt <hash>` | Get transaction receipt | `npm run evm-rpc -- -u URL receipt 0x...` |
+| `info` | Get blockchain information | `yarn evm-rpc -u URL info` |
+| `block-number` | Get current block number | `yarn evm-rpc -u URL block-number` |
+| `balance <address>` | Get account balance | `yarn evm-rpc -u URL balance 0x...` |
+| `block <identifier>` | Get block by number/hash/tag | `yarn evm-rpc -u URL block latest` |
+| `call <to>` | Make contract call | `yarn evm-rpc -u URL call 0x... -d 0x...` |
+| `code <address>` | Get contract code | `yarn evm-rpc -u URL code 0x...` |
+| `tx <hash>` | Get transaction details | `yarn evm-rpc -u URL tx 0x...` |
+| `receipt <hash>` | Get transaction receipt | `yarn evm-rpc -u URL receipt 0x...` |
 
 ### Block Command Options
 
@@ -55,17 +55,17 @@ npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964
 
 ```bash
 # Concise block tag output
-npm run evm-rpc -- -u URL block safe
+yarn evm-rpc -u URL block safe
 # Output: 0x15f5c1f (23026719)
 
 # Block finalization status
-npm run evm-rpc -- -u URL block 23026700 --status
+yarn evm-rpc -u URL block 23026700 --status
 # Output: Block 0x15f5c0c (23026700) - Status: safe
 #         Finalized: 0x15f5bff (23026687)
 #         Safe: 0x15f5c1f (23026719)
 
 # Full block data
-npm run evm-rpc -- -u URL block safe --full
+yarn evm-rpc -u URL block safe --full
 # Output: Complete JSON block data
 ```
 
@@ -104,16 +104,16 @@ const result = await client.call({
 
 ```bash
 # Install dependencies
-npm install
+yarn install
 
 # Build the project
-npm run build
+yarn build
 
 # Run tests
-npm test
+yarn test
 
 # Development mode with auto-rebuild
-npm run dev -- -u YOUR_RPC_URL info
+yarn dev -u YOUR_RPC_URL info
 ```
 
 ## Technical Stack
