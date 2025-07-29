@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -88,39 +91,43 @@ jobs:
         tar -czf ../evm-rpc-framework-${GITHUB_REF#refs/tags/}.tar.gz .
 
     - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        name: EVM RPC Framework ${{ github.ref_name }}
         body: |
-          ## EVM RPC Framework Release ${{ github.ref }}
-          
-          ### What's New
-          - Compiled binaries ready to use
-          - Full TypeScript definitions included
-          - All examples and documentation updated
-          
-          ### Usage
+          # EVM RPC Framework v${{ github.ref_name }}
+
+          Initial release of a TypeScript framework for EVM blockchain RPC interactions.
+
+          ## Features
+
+          - CLI tool for querying EVM-compatible chains
+          - Block finalization status support (latest, safe, finalized, pending, earliest)
+          - Read-only operations with full TypeScript support
+          - Programmatic API with EVMRPCClient class
+          - Built-in address and transaction validation
+
+          ## Commands
+
+          - Get blockchain info, block data, account balances
+          - Make contract calls and retrieve transaction details
+          - Check block finalization status
+          - Support for all standard EVM RPC methods
+
+          ## Installation
+
           1. Download and extract the release archive
           2. Run `yarn install` to install dependencies  
           3. Use `node dist/cli.js --help` to see available commands
-          
-          ### Quick Start
+
+          ## Quick Start
+
           ```bash
           node dist/cli.js -u YOUR_RPC_URL info
           ```
+
+          Perfect for blockchain developers needing reliable EVM chain data access without private keys.
+        files: |
+          evm-rpc-framework-${{ github.ref_name }}.tar.gz
         draft: false
         prerelease: false
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./evm-rpc-framework-${{ github.ref }}.tar.gz
-        asset_name: evm-rpc-framework-${{ github.ref }}.tar.gz
-        asset_content_type: application/gzip
