@@ -15,7 +15,7 @@ const baseConfig = {
   outdir: 'dist',
   platform: 'node',
   target: 'node18',
-  format: 'cjs',
+  format: 'esm',
   sourcemap: isDev,
   minify: !isDev,
   external: ['axios', 'commander', 'ethers'], // Mark dependencies as external
