@@ -3,7 +3,11 @@
 ## Usage
 
 ```bash
-node dist/cli.js -u <RPC_URL> <command> [arguments] [options]
+# Using npm run (for local development)
+npm run evm-rpc '--' -u <RPC_URL> <command> [arguments] [options]
+
+# Using npx (when published)
+npx evm-rpc -u <RPC_URL> <command> [arguments] [options]
 ```
 
 ## Global Options

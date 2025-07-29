@@ -13,32 +13,32 @@ npm run build
 
 ```bash
 # Get blockchain info
-node dist/cli.js -u https://ethereum-rpc.publicnode.com info
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info
 
 # Get current block number  
-node dist/cli.js -u https://ethereum-rpc.publicnode.com block-number
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com block-number
 
 # Get account balance
-node dist/cli.js -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
 
 # Make contract call (USDC total supply)
-node dist/cli.js -u https://ethereum-rpc.publicnode.com call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 -d 0x18160ddd
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 -d 0x18160ddd
 
 # Get latest block
-node dist/cli.js -u https://ethereum-rpc.publicnode.com block latest
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com block latest
 
 # Check if address is contract
-node dist/cli.js -u https://ethereum-rpc.publicnode.com code 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com code 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
 ```
 
 ## Output Formats
 
 ```bash
 # JSON output
-node dist/cli.js -u https://ethereum-rpc.publicnode.com info --format json
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info --format json
 
 # Pretty output (default)
-node dist/cli.js -u https://ethereum-rpc.publicnode.com info --format pretty
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info --format pretty
 ```
 
 ## Available Commands

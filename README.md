@@ -22,11 +22,14 @@ npm run build
 ### CLI Usage
 
 ```bash
-# Basic usage pattern
-node dist/cli.js -u <RPC_URL> <command> [arguments] [options]
+# Using npm run (for local development)
+npm run evm-rpc '--' -u <RPC_URL> <command> [arguments] [options]
 
 # Example with public node
-node dist/cli.js -u https://ethereum-rpc.publicnode.com info
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info
+
+# Using npx (when published to npm)
+npx evm-rpc -u <RPC_URL> <command> [arguments] [options]
 ```
 
 ### Available Commands
@@ -89,16 +92,16 @@ const result = await client.call({
 
 ```bash
 # Get blockchain info
-node dist/cli.js -u https://ethereum-rpc.publicnode.com info
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info
 
 # Get current block number
-node dist/cli.js -u https://ethereum-rpc.publicnode.com block-number
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com block-number
 
 # Get account balance
-node dist/cli.js -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
 
 # Make contract call (USDC totalSupply)
-node dist/cli.js -u https://ethereum-rpc.publicnode.com call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 -d 0x18160ddd
+npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 -d 0x18160ddd
 ```
 
 ## Development

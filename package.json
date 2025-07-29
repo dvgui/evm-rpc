@@ -1,42 +1,43 @@
 {
-  "name": "evm-rpc-framework",
-  "version": "1.0.0",
-  "description": "A TypeScript RPC framework for EVM blockchain interactions",
-  "main": "dist/index.js",
-  "bin": {
-    "evm-rpc": "dist/cli.js"
-  },
-  "scripts": {
-    "build": "node build.js",
-    "build:tsc": "tsc",
-    "dev": "node build.js --dev",
-    "start": "node dist/cli.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "clean": "rimraf dist"
-  },
-  "keywords": [
-    "ethereum",
-    "rpc",
-    "blockchain",
-    "evm",
-    "typescript"
-  ],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "axios": "^1.6.0",
-    "commander": "^11.0.0",
-    "ethers": "^6.0.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^29.0.0",
-    "@types/node": "^20.0.0",
-    "esbuild": "^0.19.12",
-    "jest": "^29.0.0",
-    "rimraf": "^5.0.0",
-    "ts-jest": "^29.0.0",
-    "typescript": "^5.0.0"
-  }
+    "name": "evm-rpc",
+    "version": "1.0.0",
+    "description": "A TypeScript RPC framework for EVM blockchain interactions",
+    "main": "dist/index.js",
+    "bin": {
+        "evm-rpc": "dist/cli.js"
+    },
+    "scripts": {
+        "build": "node build.js",
+        "build:tsc": "tsc",
+        "dev": "node build.js --dev",
+        "start": "node dist/cli.js",
+        "evm-rpc": "node dist/cli.js",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage",
+        "clean": "rimraf dist"
+    },
+    "keywords": [
+        "ethereum",
+        "rpc",
+        "blockchain",
+        "evm",
+        "typescript"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.6.0",
+        "commander": "^14.0.0",
+        "ethers": "^6.0.0"
+    },
+    "devDependencies": {
+        "@types/jest": "^30.0.0",
+        "@types/node": "^24.1.0",
+        "esbuild": "^0.25.8",
+        "jest": "^30.0.5",
+        "rimraf": "^6.0.1",
+        "ts-jest": "^29.4.0",
+        "typescript": "^5.0.0"
+    }
 }
