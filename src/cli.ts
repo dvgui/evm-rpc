@@ -133,23 +133,64 @@ program
 program
   .command('block')
   .description('Get block by number or hash')
-  .argument('<identifier>', 'Block number (hex/decimal) or block hash')
+  .argument('<identifier>', 'Block number (hex/decimal), block hash, or tag (latest, earliest, pending, safe, finalized)')
   .option('-t, --transactions', 'Include full transaction details', false)
+  .option('--full', 'Show full block data (default for non-tag identifiers)', false)
+  .option('-s, --status', 'Show finalization status for block numbers', false)
   .action(async (identifier, options, command) => {
     try {
       const client = new EVMRPCClient(command.parent.opts().url);
       let result;
+      const isBlockTag = ['latest', 'earliest', 'pending', 'safe', 'finalized'].includes(identifier);
 
       if (identifier.startsWith('0x') && identifier.length === 66) {
         // Block hash
         result = await client.getBlockByHash(identifier, options.transactions);
+      } else if (isBlockTag) {
+        // Block tag
+        result = await client.getBlockByNumber(identifier, options.transactions);
       } else {
         // Block number (convert to hex if decimal)
         const blockNumber = identifier.startsWith('0x') ? identifier : '0x' + parseInt(identifier).toString(16);
         result = await client.getBlockByNumber(blockNumber, options.transactions);
       }
 
-      console.log(formatOutput(result, command.parent.opts().format));
+      // For block tags, show just the block number unless --full is specified
+      if (isBlockTag && !options.full) {
+        const blockNum = parseInt(result.number, 16);
+        console.log(`${result.number} (${blockNum})`);
+      } else {
+        // Check if we should show finalization status for block numbers
+        if (!isBlockTag && options.status) {
+          const blockNum = parseInt(result.number, 16);
+          
+          // Get safe and finalized block numbers to compare
+          const [safeBlock, finalizedBlock] = await Promise.all([
+            client.getBlockByNumber('safe').catch(() => null),
+            client.getBlockByNumber('finalized').catch(() => null)
+          ]);
+          
+          let status = 'pending';
+          if (finalizedBlock && blockNum <= parseInt(finalizedBlock.number, 16)) {
+            status = 'finalized';
+          } else if (safeBlock && blockNum <= parseInt(safeBlock.number, 16)) {
+            status = 'safe';
+          }
+          
+          console.log(`Block ${result.number} (${blockNum}) - Status: ${status}`);
+          if (command.parent.opts().format === 'pretty') {
+            if (finalizedBlock) console.log(`Finalized: ${finalizedBlock.number} (${parseInt(finalizedBlock.number, 16)})`);
+            if (safeBlock) console.log(`Safe: ${safeBlock.number} (${parseInt(safeBlock.number, 16)})`);
+          }
+          
+          if (options.full) {
+            console.log('\nBlock Data:');
+            console.log(formatOutput(result, command.parent.opts().format));
+          }
+        } else {
+          console.log(formatOutput(result, command.parent.opts().format));
+        }
+      }
     } catch (error) {
       console.error('Error:', error instanceof Error ? error.message : error);
       process.exit(1);

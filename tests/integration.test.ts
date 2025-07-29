@@ -132,6 +132,52 @@ describe('EVMRPCClient Integration Tests', () => {
       expect(block.number).toBe('0x1');
       expect(block.hash).toMatch(/^0x[0-9a-fA-F]{64}$/);
     });
+
+    it('should get safe block', async () => {
+      const block = await client.getBlockByNumber('safe', false);
+      
+      expect(block.hash).toMatch(/^0x[0-9a-fA-F]{64}$/);
+      expect(block.number).toMatch(/^0x[0-9a-fA-F]+$/);
+      expect(block.timestamp).toMatch(/^0x[0-9a-fA-F]+$/);
+      expect(Array.isArray(block.transactions)).toBe(true);
+      
+      // Safe block should be reasonably recent (within last 24 hours)
+      const blockTime = parseInt(block.timestamp, 16) * 1000;
+      const now = Date.now();
+      expect(blockTime).toBeLessThanOrEqual(now);
+      expect(blockTime).toBeGreaterThan(now - 24 * 3600000); // Within last 24 hours
+    });
+
+    it('should get finalized block', async () => {
+      const block = await client.getBlockByNumber('finalized', false);
+      
+      expect(block.hash).toMatch(/^0x[0-9a-fA-F]{64}$/);
+      expect(block.number).toMatch(/^0x[0-9a-fA-F]+$/);
+      expect(block.timestamp).toMatch(/^0x[0-9a-fA-F]+$/);
+      expect(Array.isArray(block.transactions)).toBe(true);
+      
+      // Finalized block should be reasonably recent (within last 24 hours)
+      const blockTime = parseInt(block.timestamp, 16) * 1000;
+      const now = Date.now();
+      expect(blockTime).toBeLessThanOrEqual(now);
+      expect(blockTime).toBeGreaterThan(now - 24 * 3600000); // Within last 24 hours
+    });
+
+    it('should verify block ordering: finalized <= safe <= latest', async () => {
+      const [finalizedBlock, safeBlock, latestBlock] = await Promise.all([
+        client.getBlockByNumber('finalized', false),
+        client.getBlockByNumber('safe', false),
+        client.getBlockByNumber('latest', false)
+      ]);
+      
+      const finalizedNum = parseInt(finalizedBlock.number, 16);
+      const safeNum = parseInt(safeBlock.number, 16);
+      const latestNum = parseInt(latestBlock.number, 16);
+      
+      // Finalized should be <= Safe should be <= Latest
+      expect(finalizedNum).toBeLessThanOrEqual(safeNum);
+      expect(safeNum).toBeLessThanOrEqual(latestNum);
+    });
   });
 
   describe('Error handling', () => {

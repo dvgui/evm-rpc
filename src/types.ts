@@ -30,7 +30,7 @@ export interface EVMCallParams {
 export interface BlockTag {
   blockNumber?: string;
   blockHash?: string;
-  tag?: 'latest' | 'earliest' | 'pending';
+  tag?: 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized';
 }
 
 export interface TransactionReceipt {

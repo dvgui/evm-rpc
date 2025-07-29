@@ -1,108 +1,104 @@
 # EVM RPC Framework
 
-A TypeScript framework for interacting with EVM-compatible blockchain RPC endpoints in read-only mode.
+A TypeScript framework for interacting with EVM-compatible blockchain RPC endpoints with full type safety and modern tooling.
 
 ## Features
 
 - 🔗 Connect to any EVM RPC endpoint
 - 📖 Read-only operations (no private key required)
 - 🛠 Comprehensive CLI interface
-- 📦 TypeScript support with full type definitions
-- 🚀 Easy to use and extend
+- 📦 Full TypeScript support with type definitions
+- 🚀 Modern build system with esbuild
+- ✅ Comprehensive test coverage (34 tests)
+- 🏷️ Support for all Ethereum block tags (`latest`, `earliest`, `pending`, `safe`, `finalized`)
+- 📊 Block finalization status checking
 
-## Installation
+## Quick Start
 
 ```bash
 npm install
 npm run build
+
+# Get blockchain info
+npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com info
+
+# Get latest/safe/finalized blocks
+npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block latest
+npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block safe
+npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block finalized
+
+# Check block finalization status
+npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com block 23026700 --status
+
+# Get account balance
+npm run evm-rpc -- -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
 ```
 
-## Usage
+## CLI Commands
 
-### CLI Usage
+| Command | Description | Example |
+|---------|-------------|---------|
+| `info` | Get blockchain information | `npm run evm-rpc -- -u URL info` |
+| `block-number` | Get current block number | `npm run evm-rpc -- -u URL block-number` |
+| `balance <address>` | Get account balance | `npm run evm-rpc -- -u URL balance 0x...` |
+| `block <identifier>` | Get block by number/hash/tag | `npm run evm-rpc -- -u URL block latest` |
+| `call <to>` | Make contract call | `npm run evm-rpc -- -u URL call 0x... -d 0x...` |
+| `code <address>` | Get contract code | `npm run evm-rpc -- -u URL code 0x...` |
+| `tx <hash>` | Get transaction details | `npm run evm-rpc -- -u URL tx 0x...` |
+| `receipt <hash>` | Get transaction receipt | `npm run evm-rpc -- -u URL receipt 0x...` |
+
+### Block Command Options
+
+- `--status` - Show finalization status for block numbers (finalized/safe/pending)
+- `--full` - Show complete block data (default for non-tag identifiers)
+- `-t, --transactions` - Include full transaction details
 
 ```bash
-# Using npm run (for local development)
-npm run evm-rpc '--' -u <RPC_URL> <command> [arguments] [options]
+# Concise block tag output
+npm run evm-rpc -- -u URL block safe
+# Output: 0x15f5c1f (23026719)
 
-# Example with public node
-npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info
+# Block finalization status
+npm run evm-rpc -- -u URL block 23026700 --status
+# Output: Block 0x15f5c0c (23026700) - Status: safe
+#         Finalized: 0x15f5bff (23026687)
+#         Safe: 0x15f5c1f (23026719)
 
-# Using npx (when published to npm)
-npx evm-rpc -u <RPC_URL> <command> [arguments] [options]
+# Full block data
+npm run evm-rpc -- -u URL block safe --full
+# Output: Complete JSON block data
 ```
 
-### Available Commands
-
-- `block-number` - Get current block number
-- `balance <address>` - Get balance of an address
-- `call <to> [options]` - Make a contract call
-- `tx <hash>` - Get transaction by hash
-- `receipt <hash>` - Get transaction receipt
-- `block <identifier>` - Get block by number or hash
-- `code <address>` - Get contract code
-- `info` - Get blockchain information
-
-### Options
-
-- `-u, --url <url>` - RPC URL endpoint (required)
-- `-f, --format <format>` - Output format: `json` or `pretty` (default: pretty)
-
-### Programmatic Usage
+## Programmatic Usage
 
 ```typescript
 import { EVMRPCClient } from './src/client';
 
 const client = new EVMRPCClient('https://ethereum-rpc.publicnode.com');
 
-// Get current block number
-const blockNumber = await client.getBlockNumber();
-console.log('Current block:', blockNumber);
+// Get blocks with different confirmation levels
+const latestBlock = await client.getBlockByNumber('latest');
+const safeBlock = await client.getBlockByNumber('safe');
+const finalizedBlock = await client.getBlockByNumber('finalized');
 
-// Get balance
+// Get account balance
 const balance = await client.getBalance('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045');
-console.log('Balance:', balance);
 
-// Make a contract call
+// Make contract call (USDC totalSupply)
 const result = await client.call({
   to: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  data: '0x18160ddd' // totalSupply function selector
+  data: '0x18160ddd'
 });
 ```
 
-## Supported RPC Methods
+## Block Confirmation Levels
 
-- `eth_blockNumber` - Get current block number
-- `eth_getBalance` - Get account balance
-- `eth_call` - Execute a message call
-- `eth_getTransactionCount` - Get transaction count
-- `eth_getCode` - Get contract code
-- `eth_getStorageAt` - Get storage value
-- `eth_getTransactionByHash` - Get transaction by hash
-- `eth_getTransactionReceipt` - Get transaction receipt
-- `eth_getBlockByNumber` - Get block by number
-- `eth_getBlockByHash` - Get block by hash
-- `eth_getLogs` - Get logs
-- `eth_gasPrice` - Get current gas price
-- `eth_estimateGas` - Estimate gas usage
-- `eth_chainId` - Get chain ID
-- `net_version` - Get network version
-
-## CLI Examples
-
-```bash
-# Get blockchain info
-npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com info
-
-# Get current block number
-npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com block-number
-
-# Get account balance
-npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
-
-# Make contract call (USDC totalSupply)
-npm run evm-rpc '--' -u https://ethereum-rpc.publicnode.com call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 -d 0x18160ddd
-```
+| Tag | Description | Use Case |
+|-----|-------------|----------|
+| `finalized` | ~64 blocks behind latest (irreversible) | High-value transactions, final settlement |
+| `safe` | ~32 blocks behind latest (very unlikely to change) | Most DeFi applications |
+| `latest` | Most recent block | Real-time data, may be reorganized |
+| `pending` | Unconfirmed transactions | Live transaction monitoring |
 
 ## Development
 
@@ -113,12 +109,20 @@ npm install
 # Build the project
 npm run build
 
-# Run in development mode
-npm run dev -- -u YOUR_RPC_URL info
+# Run tests
+npm test
 
-# Clean build artifacts
-npm run clean
+# Development mode with auto-rebuild
+npm run dev -- -u YOUR_RPC_URL info
 ```
+
+## Technical Stack
+
+- **TypeScript 5.0** - Full type safety
+- **esbuild 0.25.8** - Lightning-fast builds  
+- **Jest 30.0.5** - Comprehensive testing
+- **Commander 14.0.0** - CLI interface
+- **Node.js 22.x** - Modern runtime features
 
 ## License
 
