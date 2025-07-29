@@ -103,6 +103,12 @@ program
 
       const client = new EVMRPCClient(command.parent.opts().url);
       const result = await client.getTransactionByHash(hash);
+      
+      if (!result) {
+        console.error(`Error: Transaction ${hash} not found.`);
+        process.exit(1);
+      }
+      
       console.log(formatOutput(result, command.parent.opts().format));
     } catch (error) {
       console.error('Error:', error instanceof Error ? error.message : error);
@@ -123,6 +129,12 @@ program
 
       const client = new EVMRPCClient(command.parent.opts().url);
       const result = await client.getTransactionReceipt(hash);
+      
+      if (!result) {
+        console.error(`Error: Transaction receipt for ${hash} not found.`);
+        process.exit(1);
+      }
+      
       console.log(formatOutput(result, command.parent.opts().format));
     } catch (error) {
       console.error('Error:', error instanceof Error ? error.message : error);
@@ -154,6 +166,12 @@ program
         // Block number (convert to hex if decimal)
         const blockNumber = identifier.startsWith('0x') ? identifier : '0x' + parseInt(identifier).toString(16);
         result = await client.getBlockByNumber(blockNumber, options.transactions);
+      }
+
+      // Check if block exists
+      if (!result) {
+        console.error(`Error: Block ${identifier} not found. This block may not exist yet.`);
+        process.exit(1);
       }
 
       // For block tags, show just the block number unless --full is specified
