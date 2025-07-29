@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { RPCRequest, RPCResponse, EVMCallParams, BlockTag, TransactionReceipt, Block } from './types';
+import { RPCRequest, RPCResponse, EVMCallParams, BlockTagParameter, TransactionReceipt, Block, Transaction, LogEntry } from './types';
 
 export class EVMRPCClient {
   private client: AxiosInstance;
@@ -15,7 +15,7 @@ export class EVMRPCClient {
     });
   }
 
-  private async makeRequest<T>(method: string, params: any[] = []): Promise<T> {
+  private async makeRequest<T>(method: string, params: unknown[] = []): Promise<T> {
     const request: RPCRequest = {
       jsonrpc: '2.0',
       method,
@@ -46,33 +46,33 @@ export class EVMRPCClient {
   }
 
   // Get balance of an address
-  async getBalance(address: string, blockTag: string = 'latest'): Promise<string> {
+  async getBalance(address: string, blockTag: BlockTagParameter = 'latest'): Promise<string> {
     return this.makeRequest<string>('eth_getBalance', [address, blockTag]);
   }
 
   // Make a call to a smart contract
-  async call(params: EVMCallParams, blockTag: string = 'latest'): Promise<string> {
+  async call(params: EVMCallParams, blockTag: BlockTagParameter = 'latest'): Promise<string> {
     return this.makeRequest<string>('eth_call', [params, blockTag]);
   }
 
   // Get transaction count (nonce) for an address
-  async getTransactionCount(address: string, blockTag: string = 'latest'): Promise<string> {
+  async getTransactionCount(address: string, blockTag: BlockTagParameter = 'latest'): Promise<string> {
     return this.makeRequest<string>('eth_getTransactionCount', [address, blockTag]);
   }
 
   // Get code at an address
-  async getCode(address: string, blockTag: string = 'latest'): Promise<string> {
+  async getCode(address: string, blockTag: BlockTagParameter = 'latest'): Promise<string> {
     return this.makeRequest<string>('eth_getCode', [address, blockTag]);
   }
 
   // Get storage at a position
-  async getStorageAt(address: string, position: string, blockTag: string = 'latest'): Promise<string> {
+  async getStorageAt(address: string, position: string, blockTag: BlockTagParameter = 'latest'): Promise<string> {
     return this.makeRequest<string>('eth_getStorageAt', [address, position, blockTag]);
   }
 
   // Get transaction by hash
-  async getTransactionByHash(hash: string): Promise<any> {
-    return this.makeRequest<any>('eth_getTransactionByHash', [hash]);
+  async getTransactionByHash(hash: string): Promise<Transaction | null> {
+    return this.makeRequest<Transaction | null>('eth_getTransactionByHash', [hash]);
   }
 
   // Get transaction receipt
@@ -81,7 +81,7 @@ export class EVMRPCClient {
   }
 
   // Get block by number
-  async getBlockByNumber(blockNumber: string, fullTransactions: boolean = false): Promise<Block> {
+  async getBlockByNumber(blockNumber: BlockTagParameter, fullTransactions: boolean = false): Promise<Block> {
     return this.makeRequest<Block>('eth_getBlockByNumber', [blockNumber, fullTransactions]);
   }
 
@@ -92,12 +92,12 @@ export class EVMRPCClient {
 
   // Get logs
   async getLogs(filter: {
-    fromBlock?: string;
-    toBlock?: string;
+    fromBlock?: BlockTagParameter;
+    toBlock?: BlockTagParameter;
     address?: string | string[];
     topics?: (string | string[] | null)[];
-  }): Promise<any[]> {
-    return this.makeRequest<any[]>('eth_getLogs', [filter]);
+  }): Promise<LogEntry[]> {
+    return this.makeRequest<LogEntry[]>('eth_getLogs', [filter]);
   }
 
   // Get gas price

@@ -1,5 +1,4 @@
 import { EVMRPCClient } from '../src/client';
-import { formatEther } from 'ethers';
 
 describe('EVMRPCClient Integration Tests', () => {
   let client: EVMRPCClient;

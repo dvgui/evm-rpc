@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { formatEther } from 'ethers';
 import { EVMRPCClient } from './client';
 import { formatOutput, isValidAddress, isValidTxHash } from './utils';
+import { EVMCallParams } from './types';
 
 const program = new Command();
 
@@ -73,7 +74,7 @@ program
         throw new Error('Invalid contract address');
       }
 
-      const callParams: any = { to };
+      const callParams: EVMCallParams = { to };
       if (options.data) callParams.data = options.data;
       if (options.from) callParams.from = options.from;
       if (options.gas) callParams.gas = options.gas;

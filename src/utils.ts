@@ -1,4 +1,4 @@
-import { formatEther, parseEther, isAddress } from 'ethers';
+import { isAddress } from 'ethers';
 
 /**
  * Validate Ethereum address
@@ -24,7 +24,7 @@ export function isValidTxHash(hash: string): boolean {
 /**
  * Format output for better readability
  */
-export function formatOutput(data: any, format: 'json' | 'pretty' = 'pretty'): string {
+export function formatOutput(data: unknown, format: 'json' | 'pretty' = 'pretty'): string {
   if (format === 'json') {
     return JSON.stringify(data, null, 2);
   }

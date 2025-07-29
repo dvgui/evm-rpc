@@ -6,7 +6,7 @@
 import { EVMRPCClient } from './client';
 import { formatEther } from 'ethers';
 
-async function examples() {
+async function examples(): Promise<void> {
   // Replace with your RPC URL
   const RPC_URL = 'https://ethereum-rpc.publicnode.com';
   // For production, use a dedicated RPC provider like Alchemy or Infura

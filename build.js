@@ -1,6 +1,6 @@
-const esbuild = require('esbuild');
-const fs = require('fs');
-const path = require('path');
+import esbuild from 'esbuild';
+import fs from 'fs';
+import { execSync } from 'child_process';
 
 const isDev = process.argv.includes('--dev');
 
@@ -36,7 +36,6 @@ async function build() {
     // Copy types if needed (esbuild doesn't generate .d.ts files)
     if (!isDev) {
       console.log('📝 Generating TypeScript declarations...');
-      const { execSync } = require('child_process');
       try {
         execSync('tsc --emitDeclarationOnly --outDir dist', { stdio: 'inherit' });
       } catch (error) {

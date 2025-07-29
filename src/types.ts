@@ -1,11 +1,11 @@
 export interface RPCRequest {
   jsonrpc: string;
   method: string;
-  params: any[];
+  params: unknown[];
   id: number | string;
 }
 
-export interface RPCResponse<T = any> {
+export interface RPCResponse<T = unknown> {
   jsonrpc: string;
   id: number | string;
   result?: T;
@@ -15,7 +15,7 @@ export interface RPCResponse<T = any> {
 export interface RPCError {
   code: number;
   message: string;
-  data?: any;
+  data?: unknown;
 }
 
 export interface EVMCallParams {
@@ -27,10 +27,35 @@ export interface EVMCallParams {
   value?: string;
 }
 
-export interface BlockTag {
+// Type for block tag parameters used in RPC calls
+export type BlockTagParameter = 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized' | string;
+
+// Log entry interface
+export interface LogEntry {
+  address: string;
+  topics: string[];
+  data: string;
   blockNumber?: string;
+  transactionHash?: string;
+  transactionIndex?: string;
   blockHash?: string;
-  tag?: 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized';
+  logIndex?: string;
+  removed?: boolean;
+}
+
+// Transaction interface
+export interface Transaction {
+  hash: string;
+  nonce: string;
+  blockHash: string | null;
+  blockNumber: string | null;
+  transactionIndex: string | null;
+  from: string;
+  to: string | null;
+  value: string;
+  gasPrice: string;
+  gas: string;
+  input: string;
 }
 
 export interface TransactionReceipt {
@@ -43,7 +68,7 @@ export interface TransactionReceipt {
   cumulativeGasUsed: string;
   gasUsed: string;
   contractAddress: string | null;
-  logs: any[];
+  logs: LogEntry[];
   status: string;
 }
 
@@ -55,5 +80,5 @@ export interface Block {
   gasLimit: string;
   gasUsed: string;
   miner: string;
-  transactions: string[] | any[];
+  transactions: string[] | Transaction[];
 }
