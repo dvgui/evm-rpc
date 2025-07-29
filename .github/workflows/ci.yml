@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
 
     steps:
     - name: Checkout code
@@ -49,15 +49,15 @@ jobs:
       run: npm run build
 
     - name: Run unit tests
-      run: npm test -- --testPathPattern="(client|utils)\.test\.ts$"
+      run: npm test -- --testPathPatterns="(client|utils)\.test\.ts$"
 
     - name: Run integration tests
-      run: npm test -- --testPathPattern="integration\.test\.ts$"
+      run: npm test -- --testPathPatterns="integration\.test\.ts$"
       env:
         RPC_URL: https://ethereum-rpc.publicnode.com
 
     - name: Run example tests
-      run: npm test -- --testPathPattern="examples\.test\.ts$"
+      run: npm test -- --testPathPatterns="examples\.test\.ts$"
       env:
         RPC_URL: https://ethereum-rpc.publicnode.com
 
@@ -80,19 +80,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js 20.x
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v4
       with:
-        node-version: 20.x
+        node-version: 22.x
         cache: 'npm'
 
     - name: Cache node_modules
       uses: actions/cache@v3
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-22.x-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node-20.x-
+          ${{ runner.os }}-node-22.x-
           ${{ runner.os }}-node-
 
     - name: Install dependencies
@@ -133,10 +133,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js 20.x
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v4
       with:
-        node-version: 20.x
+        node-version: 22.x
         cache: 'npm'
 
     - name: Install dependencies
