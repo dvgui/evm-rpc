@@ -13,23 +13,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js 20.x
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v4
       with:
-        node-version: 20.x
-        cache: 'npm'
+        node-version: 22.x
+        cache: 'yarn'
 
     - name: Cache node_modules
       uses: actions/cache@v3
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+        path: |
+          ~/.yarn/cache
+          **/node_modules
+        key: ${{ runner.os }}-yarn-22.x-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-node-20.x-
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-yarn-22.x-
+          ${{ runner.os }}-yarn-
 
     - name: Install dependencies
-      run: npm ci
+      run: yarn install --frozen-lockfile
 
     - name: Cache build output
       uses: actions/cache@v3
@@ -41,10 +43,10 @@ jobs:
           ${{ runner.os }}-build-
 
     - name: Run tests
-      run: npm test
+      run: yarn test
 
     - name: Build project with esbuild
-      run: npm run build
+      run: yarn build
 
   create-release:
     needs: test
@@ -55,31 +57,33 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js 20.x
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v4
       with:
-        node-version: 20.x
-        cache: 'npm'
+        node-version: 22.x
+        cache: 'yarn'
 
     - name: Cache node_modules
       uses: actions/cache@v3
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+        path: |
+          ~/.yarn/cache
+          **/node_modules
+        key: ${{ runner.os }}-yarn-22.x-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-node-20.x-
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-yarn-22.x-
+          ${{ runner.os }}-yarn-
 
     - name: Install dependencies
-      run: npm ci
+      run: yarn install --frozen-lockfile
 
     - name: Build project with esbuild
-      run: npm run build
+      run: yarn build
 
     - name: Create release archive
       run: |
         mkdir -p release
-        cp -r dist package.json README.md EXAMPLES.md release/
+        cp -r dist package.json yarn.lock README.md release/
         cd release
         tar -czf ../evm-rpc-framework-${GITHUB_REF#refs/tags/}.tar.gz .
 
@@ -101,7 +105,7 @@ jobs:
           
           ### Usage
           1. Download and extract the release archive
-          2. Run `npm install` to install dependencies  
+          2. Run `yarn install` to install dependencies  
           3. Use `node dist/cli.js --help` to see available commands
           
           ### Quick Start
