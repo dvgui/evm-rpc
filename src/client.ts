@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { RPCRequest, RPCResponse, EVMCallParams, BlockTagParameter, TransactionReceipt, Block, Transaction, LogEntry } from './types';
+import { RPCRequest, RPCResponse, EVMCallParams, BlockTagParameter, TransactionReceipt, Block, Transaction, Log } from './types';
 
 export class EVMRPCClient {
   private client: AxiosInstance;
@@ -96,8 +96,8 @@ export class EVMRPCClient {
     toBlock?: BlockTagParameter;
     address?: string | string[];
     topics?: (string | string[] | null)[];
-  }): Promise<LogEntry[]> {
-    return this.makeRequest<LogEntry[]>('eth_getLogs', [filter]);
+  }): Promise<Log[]> {
+    return this.makeRequest<Log[]>('eth_getLogs', [filter]);
   }
 
   // Get gas price

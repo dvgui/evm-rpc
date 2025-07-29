@@ -1,3 +1,5 @@
+import type { Log } from 'ethers';
+
 export interface RPCRequest {
   jsonrpc: string;
   method: string;
@@ -30,20 +32,10 @@ export interface EVMCallParams {
 // Type for block tag parameters used in RPC calls
 export type BlockTagParameter = 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized' | string;
 
-// Log entry interface
-export interface LogEntry {
-  address: string;
-  topics: string[];
-  data: string;
-  blockNumber?: string;
-  transactionHash?: string;
-  transactionIndex?: string;
-  blockHash?: string;
-  logIndex?: string;
-  removed?: boolean;
-}
+// Re-export the ethers Log type
+export type { Log };
 
-// Transaction interface
+// Keep custom types that match RPC response format (strings for numbers)
 export interface Transaction {
   hash: string;
   nonce: string;
@@ -68,7 +60,7 @@ export interface TransactionReceipt {
   cumulativeGasUsed: string;
   gasUsed: string;
   contractAddress: string | null;
-  logs: LogEntry[];
+  logs: Log[];
   status: string;
 }
 

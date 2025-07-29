@@ -30,6 +30,18 @@ yarn evm-rpc -u https://ethereum-rpc.publicnode.com block 23026700 --status
 yarn evm-rpc -u https://ethereum-rpc.publicnode.com balance 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
 ```
 
+> **💡 Tip:** For cleaner output without yarn wrapper messages, use `yarn --silent evm-rpc` instead of `yarn evm-rpc`
+
+### Global Installation (Alternative)
+
+For the cleanest experience, install globally:
+
+```bash
+npm install -g .
+# Then use directly:
+evm-rpc -u https://ethereum-rpc.publicnode.com block latest
+```
+
 ## CLI Commands
 
 | Command              | Description                  | Example                                   |

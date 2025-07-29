@@ -1,16 +1,19 @@
 import { isAddress } from 'ethers';
 
+// Re-export isAddress directly from ethers
+export { isAddress };
+
 /**
- * Validate Ethereum address
+ * Validate Ethereum address with strict formatting
  */
 export function isValidAddress(address: string): boolean {
-  // First check with our strict regex
+  // First check with our strict regex (must have 0x prefix and correct length)
   const isValidFormat = /^0x[a-fA-F0-9]{40}$/.test(address);
   if (!isValidFormat) {
     return false;
   }
   
-  // Then use ethers for additional validation (checksum, etc.)
+  // Then use ethers for checksum validation
   return isAddress(address);
 }
 
