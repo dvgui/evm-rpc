@@ -1,0 +1,122 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-20.x-
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Cache build output
+      uses: actions/cache@v3
+      with:
+        path: dist
+        key: ${{ runner.os }}-build-release-${{ hashFiles('src/**/*.ts') }}
+        restore-keys: |
+          ${{ runner.os }}-build-release-
+          ${{ runner.os }}-build-
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build project with esbuild
+      run: npm run build
+
+  create-release:
+    needs: test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-20.x-
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project with esbuild
+      run: npm run build
+
+    - name: Create release archive
+      run: |
+        mkdir -p release
+        cp -r dist package.json README.md EXAMPLES.md release/
+        cd release
+        tar -czf ../evm-rpc-framework-${GITHUB_REF#refs/tags/}.tar.gz .
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## EVM RPC Framework Release ${{ github.ref }}
+          
+          ### What's New
+          - Compiled binaries ready to use
+          - Full TypeScript definitions included
+          - All examples and documentation updated
+          
+          ### Usage
+          1. Download and extract the release archive
+          2. Run `npm install` to install dependencies  
+          3. Use `node dist/cli.js --help` to see available commands
+          
+          ### Quick Start
+          ```bash
+          node dist/cli.js -u YOUR_RPC_URL info
+          ```
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./evm-rpc-framework-${{ github.ref }}.tar.gz
+        asset_name: evm-rpc-framework-${{ github.ref }}.tar.gz
+        asset_content_type: application/gzip
